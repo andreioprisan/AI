@@ -11,10 +11,11 @@
 # me in the completion of this assignment:
 # - Artificial Intelligence: A Modern Approach (3rd Edition) - pg: 71, 
 # - https://n-puzzle-solver.appspot.com/ (used to conceptualize problem)
-#
+# 
 
 
 # imports
+import random
 
 
 # global variables
@@ -43,6 +44,9 @@ class Eight_Puzzle_Node:
 			self.state.append(terminal_state_1[i][:])
 
 
+	def is_terminal_state(self):
+		return self.state == terminal_state_1 or self.state == terminal_state_2
+
 	def set_parent_node(self, p):
 		self.parent = p
 
@@ -57,10 +61,44 @@ class Eight_Puzzle_Node:
 
 	# shuffles the board which is by default configured to the terminal_state
 	def shuffle_board(self):
-		i,j = self.index_of(0)
+		# initialize a 1D list to hold the board elements
+		temp = []
 
-		print i,j
+		# add the elements to the list
+		for i in range(self.n):
+			for j in range(self.n):
+				temp.append(self.state[i][j])
 
+		# shuffle the list
+		random.shuffle(temp)
+
+		print temp
+
+		# add the shuffled elements to a 2D list
+		shuffled_state = []
+		row = []
+		iterator = 0
+		for i in range(len(temp)):
+
+			# if the length of a row hasn't been reached, append the next value
+			if iterator < self.n:
+				row.append(temp[i])
+			
+			# append the row to the new state configuration and start the next row
+			else:
+				shuffled_state.append(row)
+				iterator = 0
+				row = []
+				row.append(temp[i])
+
+			iterator += 1
+
+		# append the final row
+		shuffled_state.append(row)
+			
+
+		print shuffled_state
+		self.state = shuffled_state
 
 	def print_board(self):
 		board = ""
@@ -81,7 +119,10 @@ class Eight_Puzzle_Node:
 def main():
 	puzzle = Eight_Puzzle_Node(3)
 	puzzle.print_board()
+	print puzzle.is_terminal_state()
 	puzzle.shuffle_board()
+	puzzle.print_board()
+	print puzzle.is_terminal_state()
 
 
 
