@@ -20,18 +20,20 @@ import random
 import pdb
 
 # global variables
-easy_3x3 = [[1,2,3],[4,5,6],[0,7,8]]
+delim = ","
+easy_3x3 = [[1,2,5],[3,4,0],[6,7,8]]
+medium_3x3 = [[1,4,2],[7,5,8],[3,0,6]]
+hard_3x3 = [[0,8,7],[6,5,4],[3,2,1]]
 hw_example = [[1,2,5],[3,4,0],[6,7,8]]
 
 
-# this class represents a node in the N-puzzle game tree. A single contains the following components:
+# this class represents a node in the N-puzzle game tree. A single node contains the following components:
 # - state: the state in the state space to which the node corresponds -> the worldy instance of the board i.e. configuration
 # - parent: the node in the search tree that generated this node 
 # - action: the action (tile shift) that was applied to the parent to generate the node
 # - path_cost: the cost of the path from the initial state to the node (indicated by parent pointers)
 # - children: the successor (child nodes) that represent legal state changes from this state
 class N_Puzzle_Node:
-
 
 	def generate_terminal_states(self):
 		terminal_state_1 = []
@@ -92,49 +94,9 @@ class N_Puzzle_Node:
 				for j in range(self.n):
 					self.state[i][j] = state[i][j]
 
-
-	def generate_successor(self, action):
-		if action == "UP":
-			successor = self.generate_copy()
-
-			# find the blank tile in the successor
-			i, j = successor.indices_of(0)
-
-			# swap the blank with the tile directly above
-			successor.swap_tiles(i, j, i-1, j)
-
-		elif action == "DOWN":
-			successor = self.generate_copy()
-
-			i, j = successor.indices_of(0)
-
-			# swap the blank with the tile directly below
-			successor.swap_tiles(i, j, i+1, j)
-
-		elif action == "LEFT":
-			successor = self.generate_copy()
-
-			i, j = successor.indices_of(0)
-
-			# swap the blank with the tile directly to the left
-			successor.swap_tiles(i, j, i, j-1)
-
-		elif action == "RIGHT":
-			successor = self.generate_copy()
-
-			i, j = successor.indices_of(0)
-
-			# swap the blank with the tile directly to the right
-			successor.swap_tiles(i, j, i, j+1)
-
-		return successor
-
 	def add_successor(self, successor):
 		if successor is not None:
 			self.successors.append(successor)
-
-	def is_terminal_state(self):
-		return self.state == self.terminal_state_1 or self.state == self.terminal_state_2
 
 	# finds the coordiantes of the target value
 	def indices_of(self, target):
@@ -173,42 +135,104 @@ class N_Puzzle_Node:
 
 		return new_node
 
+	def generate_successor(self, action):
+		if action == "UP":
+			successor = self.generate_copy()
+
+			# find the blank tile in the successor
+			i, j = successor.indices_of(0)
+
+			# swap the blank with the tile directly above
+			successor.swap_tiles(i, j, i-1, j)
+
+		elif action == "DOWN":
+			successor = self.generate_copy()
+
+			i, j = successor.indices_of(0)
+
+			# swap the blank with the tile directly below
+			successor.swap_tiles(i, j, i+1, j)
+
+		elif action == "LEFT":
+			successor = self.generate_copy()
+
+			i, j = successor.indices_of(0)
+
+			# swap the blank with the tile directly to the left
+			successor.swap_tiles(i, j, i, j-1)
+
+		elif action == "RIGHT":
+			successor = self.generate_copy()
+
+			i, j = successor.indices_of(0)
+
+			# swap the blank with the tile directly to the right
+			successor.swap_tiles(i, j, i, j+1)
+
+		# print action
+		# successor.print_board()
+		return successor
+
+	def get_possible_moves(self):
+		i, j = self.indices_of(0)
+
+		# a list of the indices (as pairs) which the blank can be moved to
+		possible = []
+
+		if i > 0: # UP is legal if not on the top border
+			possible.append((i - 1, j))
+
+		if i < self.n-1: # DOWN is legal if not on bottom border
+			x = 0
+
+
+
 	# class which generates all successors (child nodes) that represent legal state changes from the current state
 	# abstract: this class generates all child nodes of the current node in the tree
 	def generate_successors(self):
 		# first find the indices
 		i,j = self.indices_of(0)
+		# self.print_board()
 
 		# make sure the blank is on the board
 		if i != -1:
 
 			# in a case when the blank isn't on a border, all actions are available (UP, DOWN, LEFT, RIGHT)
 			if (i < self.n-1 and j < self.n-1) and (i > 0 and j > 0):
+				# print "all actions"
 				return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]
 			else:
 				# determine which border(s) the blank tile is on to rule an that action
 				if i == 0 and j == 0: # top left corner
+					# print "down and right"
 					return [self.generate_successor("DOWN"), self.generate_successor("RIGHT")]
 
 				elif i == 0 and j == self.n-1: # top right corner
+					# print "down and left"
 					return [self.generate_successor("DOWN"), self.generate_successor("LEFT")]
 
 				elif i == self.n-1 and j == 0: # bottom left corner
+					# print "up and right"
 					return [self.generate_successor("UP"), self.generate_successor("RIGHT")]
 
 				elif i == self.n-1 and j == self.n-1: # bottom right corner
+					# print "up and left"
 					return [self.generate_successor("UP"), self.generate_successor("LEFT")]
 
 				elif i == 0 and (j > 0 and j < self.n-1): # top border (not corners)
+					# print "down left right"
 					return [self.generate_successor("DOWN"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]
 
 				elif i == self.n-1 and (j > 0 and j < self.n-1): # bottom border (not corners)
+					# print "up left right"
 					return [self.generate_successor("UP"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]		
 
 				elif (i > 0 and i < self.n-1) and j == 0: # left border (not corners)
+					# print "up down right"
 					return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("RIGHT")]
 
 				elif (i > 0 and i < self.n-1) and j == self.n-1: # right border (not corners)
+					# print "up down left"
 					return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("LEFT")]
 
 	# shuffles the board which is by default configured to the terminal_state
@@ -249,6 +273,9 @@ class N_Puzzle_Node:
 		# set the state to the shuffled configuration
 		self.state = shuffled_state
 		return
+
+	def is_terminal_state(self):
+		return self.state == self.terminal_state_1 or self.state == self.terminal_state_2
 
 	def board_to_list(self):
 		l = []
@@ -291,11 +318,20 @@ class N_Puzzle_Node:
 
 		child.print_board()
 
-
-
-
+	def _close(self):
+		self
 
 ########### END CLASS OBJECT #################
+def containsState(l, elem):
+	if l is None or elem is None:
+		return False
+
+	for item in l:
+		if item.board_to_string() == elem.board_to_string():
+			print "same"
+			return True
+
+	return False
 
 def isEmpty(l):
 	return len(l) < 1
@@ -304,8 +340,7 @@ def bfs(n):
 	# pdb.set_trace()
 	bfs_puzzle = N_Puzzle_Node(n, None)
 	# bfs_puzzle.shuffle_board()
-	bfs_puzzle.replace_state(hw_example)
-
+	bfs_puzzle.replace_state(medium_3x3)
 
 	if bfs_puzzle.is_terminal_state():
 		return bfs_puzzle
@@ -314,10 +349,11 @@ def bfs(n):
 	bfs_puzzle.print_board()
 	print "******\n"
 
-	# create a set to track visited nodes
-	visited_nodes = set()
+	# create a running sum of visited nodes as string with delim
+	counter = 0
+	visited_nodes = ""
 
-	# create a queue to keep track of fringe (?)
+	# create a queue to keep track of fringe nodes
 	queue = []
 	queue.append(bfs_puzzle)
 
@@ -326,28 +362,29 @@ def bfs(n):
 		if isEmpty(queue):
 			return None
 		
-		# choose the shallowest node in frontier
+		# choose the shallowest node in fringe
 		node = queue.pop(0)
 		
 		# mark the node as visited
-		visited_nodes.add(node.board_to_string())
+		visited_nodes += (node.board_to_string() + delim)
+		counter += 1
+		# print counter
 
 		# iterate over legal moves
 		for s in node.generate_successors():
 			# is child has not be visited and is not in the frontier
-			if s.board_to_string() not in visited_nodes and s not in queue:
+			if visited_nodes.find(s.board_to_string()) == -1 and containsState(queue, s) is False:
 				# check if node is terminal state
 				if s.is_terminal_state():
 					return s
-				
-				# insert the child at the end of the fronteir
-				queue.append(s)
-				
-	print "returning without solution"
+				else:
+					# insert the child at the end of the fronteir
+					queue.append(s)
 
 def dfs(n):
+	# pdb.set_trace()
 	dfs_puzzle = N_Puzzle_Node(n, None)
-	dfs_puzzle.replace_state(easy_3x3)
+	# dfs_puzzle.replace_state(easy_3x3)
 	# dfs_puzzle.shuffle_board()
 
 	if dfs_puzzle.is_terminal_state():
@@ -357,7 +394,8 @@ def dfs(n):
 	dfs_puzzle.print_board()
 	print "******\n"
 
-	visited_nodes = set()
+	counter = 0
+	visited_nodes = ""
 
 	stack = []
 	stack.append(dfs_puzzle)
@@ -366,45 +404,74 @@ def dfs(n):
 		if isEmpty(stack):
 			return None
 
-		node = stack[len(stack)-1]
+		node = stack.pop()
 
-		visited_nodes.add(node.board_to_string())
+		visited_nodes += (node.board_to_string() + delim)
+		counter += 1
+		# print counter
 
 		for s in node.generate_successors():
 			# is child has not be visited and is not in the frontier
-			if s.board_to_string() not in visited_nodes and s not in stack:
+			if visited_nodes.find(s.board_to_string()) == -1 and containsState(stack, s) is False:
 				# check if node is terminal state
 				if s.is_terminal_state():
 					return s
-				
-				# insert the child at the end of the fronteir
-				stack.append(s)
+				else:
+					stack.append(s)
 
-def A_star(n):
+def A_star(n, heuristic):
+	a_star_puzzle = N_Puzzle_Node(n, None)
+	a_star_puzzle.replace_state(easy_3x3)
+
+	if a_star_puzzle.is_terminal_state():
+		return a_star_puzzle
+
+	counter = 0
+	visited_nodes = ""
+
+	queue = []
+	queue.append(a_star_puzzle)
+
+	while True:
+		if isEmpty(queue):
+			return None
+
+		node = queue.pop(0)
+
+		visited_nodes += (node.board_to_string() + delim)
+		counter += 1
+
+		if node.is_terminal_state():
+			return node
+
+
+		for s in node.generate_successors():
+			if visited_nodes.find(s.board_to_string()) == -1 and containsState(queue, s) is False:
+
+
+def general_he
+
 
 
 def debug():
-	puzzle = N_Puzzle_Node(3)
-	puzzle.print_board()
-	print puzzle.is_terminal_state()
-	puzzle.generate_successors()
-	
-	puzzle.shuffle_board()
-	puzzle.print_board()
-	print puzzle.is_terminal_state()
-	puzzle.generate_successors()
-	return
+	n1 = N_Puzzle_Node(3, None)
+	n2 = N_Puzzle_Node(3, None)
+
+	n1.print_board()
+	n2.print_board()
+
+	visited_nodes = n1.board_to_string() + delim
+
+	print visited_nodes.find(n2.board_to_string())
 
 def main():
 	print "\nstart"
 	start_time = time.time()
 
 	# debug()
+	# n1 = bfs(3)
 	n1 = dfs(3)
 	n1.print_path()
-
-
-
 
 	print "\nprogram execution = {t} seconds".format(t=(time.time()-start_time))
 	print "exiting...\n"
