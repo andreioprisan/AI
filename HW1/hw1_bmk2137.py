@@ -1,6 +1,6 @@
 # Braden Katzman - bmk2137 - Columbia University Summer 2016 (Session 1)
-# COMS 4701 Artificial Intelligence
-# Professor Ansaf Salled-Aouissi
+# COMS W4701 Artificial Intelligence
+# Professor Ansaf Salleb-Aouissi
 # HW1 - N-puzzle solver and evaluations using search algorithms:
 #	- Breadth-First Search
 #	- Depth-First Search
@@ -9,7 +9,7 @@
 #
 # All code implemented was written solely by Braden Katzman. The following resources aided
 # me in the completion of this assignment:
-# - Artificial Intelligence: A Modern Approach (3rd Edition) - pg: 71, 
+# - Artificial Intelligence: A Modern Approach (3rd Edition) - pg: 71
 # - https://n-puzzle-solver.appspot.com/ (used to conceptualize problem)
 # - http://pythonforbiologists.com/index.php/measuring-memory-usage-in-python/ (memory requirements)
 
@@ -26,11 +26,10 @@ delim = ","
 
 # - tables 
 easy_3x3 = [[1,2,5],[3,4,0],[6,7,8]]
-medium_3x3 = [[1,4,2],[7,5,8],[3,0,6]]
 hard_3x3 = [[0,8,7],[6,5,4],[3,2,1]]
-hw_example = [[1,2,5],[3,4,0],[6,7,8]]
 
-example_2 = [[1,4,2],[3,7,5],[6,0,8]]
+hw_example = [[1,2,5],[3,4,0],[6,7,8]]
+piazza_example = [[1,4,2],[3,7,5],[6,0,8]]
 
 # - strings
 _bfs = "Breadth-First Search"
@@ -38,16 +37,17 @@ _dfs = "Depth-First Search"
 _a_star = "A* Search"
 _id_a_star = "Iterative Deepening A*"
 
-
 # **** END GLOBAL VARS
 
 
 # this class represents a node in the N-puzzle game tree. A single node contains the following components:
+# - n: the dimension of the board
 # - state: the state in the state space to which the node corresponds -> the worldy instance of the board i.e. configuration
 # - parent: the node in the search tree that generated this node 
-# - action: the action (tile shift) that was applied to the parent to generate the node
 # - depth: depth = the cost of the path from the initial state to the node (indicated by parent pointers)
 # - children: the successor (child nodes) that represent legal state changes from this state
+# - heuristic_function_value: h(n) for this configuration (only used by A* and Iterative Deepening A*)
+
 class N_Puzzle_Node:
 
 	# generates the two end states (o bottom right, 0 top left) based on the nxn dimensions
@@ -241,53 +241,6 @@ class N_Puzzle_Node:
 					# print "up down left"
 					return [self.generate_successor("LEFT"), self.generate_successor("DOWN"), self.generate_successor("UP")]
 
-	# # method which generates all successors (child nodes) that represent legal state changes from the current state
-	# # abstract: this class generates all child nodes of the current node in the tree
-	# def generate_successors(self):
-	# 	# first find the indices
-	# 	i,j = self.indices_of(0)
-	# 	# self.print_board()
-
-	# 	# make sure the blank is on the board
-	# 	if i != -1:
-
-	# 		# in a case when the blank isn't on a border, all actions are available (UP, DOWN, LEFT, RIGHT)
-	# 		if (i < self.n-1 and j < self.n-1) and (i > 0 and j > 0):
-	# 			# print "all actions"
-	# 			return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]
-	# 		else:
-	# 			# determine which border(s) the blank tile is on to rule an that action
-	# 			if i == 0 and j == 0: # top left corner
-	# 				# print "down and right"
-	# 				return [self.generate_successor("DOWN"), self.generate_successor("RIGHT")]
-
-	# 			elif i == 0 and j == self.n-1: # top right corner
-	# 				# print "down and left"
-	# 				return [self.generate_successor("DOWN"), self.generate_successor("LEFT")]
-
-	# 			elif i == self.n-1 and j == 0: # bottom left corner
-	# 				# print "up and right"
-	# 				return [self.generate_successor("UP"), self.generate_successor("RIGHT")]
-
-	# 			elif i == self.n-1 and j == self.n-1: # bottom right corner
-	# 				# print "up and left"
-	# 				return [self.generate_successor("UP"), self.generate_successor("LEFT")]
-
-	# 			elif i == 0 and (j > 0 and j < self.n-1): # top border (not corners)
-	# 				# print "down left right"
-	# 				return [self.generate_successor("DOWN"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]
-
-	# 			elif i == self.n-1 and (j > 0 and j < self.n-1): # bottom border (not corners)
-	# 				# print "up left right"
-	# 				return [self.generate_successor("UP"), self.generate_successor("LEFT"), self.generate_successor("RIGHT")]	
-
-	# 			elif (i > 0 and i < self.n-1) and j == 0: # left border (not corners)
-	# 				# print "up down right"
-	# 				return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("RIGHT")]
-
-	# 			elif (i > 0 and i < self.n-1) and j == self.n-1: # right border (not corners)
-	# 				# print "up down left"
-	# 				return [self.generate_successor("UP"), self.generate_successor("DOWN"), self.generate_successor("LEFT")]
 
 	# shuffles the board which is by default configured to the terminal_state
 	def shuffle_board(self):
@@ -330,6 +283,7 @@ class N_Puzzle_Node:
 
 	# returns True if node's board configuration is equal to a terminal state, False otherwise
 	def is_terminal_state(self):
+		# concatenate each tile as a string to a list
 		state_list = []
 		for i in self.state:
 			for j in i:
@@ -345,6 +299,7 @@ class N_Puzzle_Node:
 			for m in k:
 				terminal_state_2_list += [str(m)]
 
+		# convert the lists to strings and compare them
 		return ''.join(state_list) == ''.join(terminal_state_1_list) or ''.join(state_list) == ''.join(terminal_state_2_list)
 
 	# a list representation of the configuration of the board
@@ -381,8 +336,21 @@ class N_Puzzle_Node:
 		print board
 		return
 
-	def find_action(self, parent_state):
-		x = 0
+	def find_action(self, child):
+		i, j = self.indices_of(0)
+
+		k, l = child.indices_of(0)
+
+		if k != i: # k,i are rows, so difference means UP or DOWN action
+			if k > i:
+				return "DOWN"
+			else:
+				return "UP"
+		elif l != j: # l, j are cols, so difference means LEFT or RIGHT
+			if l > j:
+				return "RIGHT"
+			else:
+				return "LEFT"
 
 	def results(self, search_algorithm, nodes_expanded, running_time):
 		child = self
@@ -393,6 +361,7 @@ class N_Puzzle_Node:
 		cost_of_path = 0
 		depth_of_db = 0
 		while parent is not None:
+			solution_path.insert(0, parent.find_action(child))
 			# move up a node
 			child = parent
 			parent = child.parent
@@ -407,6 +376,7 @@ class N_Puzzle_Node:
 		depth_of_db += 1
 
 		print "***** Results for {search_algorithm} on {n}x{n} puzzle *****".format(search_algorithm=search_algorithm, n=self.n)
+		print " - Solution: {solution}".format(solution=str(solution_path))
 		print " - Cost of Path = {cost_of_path}".format(cost_of_path=cost_of_path)
 		print " - # Nodes Expanded = {num_nodes}".format(num_nodes=nodes_expanded)
 		print " - Max depth of stack/queue = {max_depth}".format(max_depth=depth_of_db)
@@ -421,9 +391,9 @@ class N_Puzzle_Node:
 
 		while parent is not None:
 			child.print_board()
+			print "   ^"
 			print "   |"
 			print "   |"
-			print "   v"
 			child = parent
 			parent = child.parent
 
@@ -448,8 +418,6 @@ def containsState(l, elem):
 
 		if ''.join(elem_list) == ''.join(item_list):
 			return True
-		# if item.board_to_string() == elem.board_to_string():
-		# 	return True
 
 	return False
 
@@ -485,7 +453,6 @@ def bfs(start):
 		# mark the node as visited
 		visited_nodes += (node.board_to_string() + delim)
 		nodes_expanded += 1
-		print nodes_expanded
 
 		# iterate over legal moves
 		for s in node.generate_successors():
@@ -744,10 +711,9 @@ def main():
 	if len(sys.argv) != 2:
 		print "Usage: python <hw1_bmk2137.py> <search alg: bfs, dfs, a*, id_a*>"
 	else:
-		n = len(hard_3x3) # *************** CHANGE THE TABLE INSTANCE HERE : Lines 27-31 *************
-		node = N_Puzzle_Node(3)
-		node.replace_state(hard_3x3) # *************** CHANGE THE TABLE INSTANCE HERE : Lines 27-31 *************
-		# node.shuffle_board()
+		n = len(hw_example) # *************** CHANGE THE TABLE INSTANCE HERE : Lines 27-31 *************
+		node = N_Puzzle_Node(n) # *************** CHANGE THE TABLE INSTANCE HERE if the dimensions change *************
+		node.replace_state(hw_example) # *************** CHANGE THE TABLE INSTANCE HERE : Lines 27-31 *************
 
 		search_algorithm = sys.argv[1]
 		if search_algorithm.lower() == "dfs":
@@ -764,17 +730,12 @@ def main():
 			goal, nodes_expanded = ID_A_star(node)
 
 	running_time = time.time()-start_time
-	goal.print_path()
-	goal.results(search_algorithm, nodes_expanded, running_time)
+	if goal is not None:
+		goal.print_path()
+		goal.results(search_algorithm, nodes_expanded, running_time)
 
 	print "\ntotal program execution = {t} seconds".format(t=(time.time()-start_time))
 	print "exiting...\n"
-
-
-## ISSUES:
-#	- DFS doesn't work on medium, hard boards
-#	- BFS takes too much time on hard board - not even sure if it works (have waited about 15 minutes and it has expanded about 40k-50k nodes)
-#	- ID_A* slows down at depth 11 on hard board --> too slow to finish
 
 if __name__ == "__main__":
     main()
