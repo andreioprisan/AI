@@ -28,16 +28,24 @@ class PlayerAI(BaseAI):
         return self.iterativeDepthTime(grid)
 
     def iterativeDepthTime(self, grid):
+       # start at root
         depth = 1
         bestMove = 1
+
+        # set time limit at 1 sec. (leave 0.05 time to make move and print board)
         moveTime = .95
+
+        # initialize alpha and beta to high and low values
         startAlpha = -10000
         startBeta = 10000
+
+        # start a timer to track the time for each move
         start = time.time()
         runTime = 0
 
-        #uses iterative deepening to find best possible move in allotted time
+        # use iterative deepening to find best possible move in allotted time
         while runTime < moveTime:
+            # use alpha beta pruning to efficiently find a good move
             someBest = self.alphaBeta(depth, startAlpha, startBeta, grid, start)
             bestMove = someBest[0]
             depth += 1
@@ -45,14 +53,30 @@ class PlayerAI(BaseAI):
 
         return bestMove
 
+    # alpha beta pruning
+    # params:
+    #    - depth: the current depth in the iteratively deepning search algorithm. starts at 1, incremented by 1 on each iteration
+    #    - alpha: the lowest value seen thus far
+    #    - beta: the highest value seen thus far
+    #    - grid: the current configuration of the board
+    #    - start: the timer
     def alphaBeta(self, depth, alpha, beta, grid, start):
+        # set alpha to the smallest value so far to iteratively improve
         best = alpha
+
+        # get the available moves given the current board configuration
         moves = grid.getAvailableMoves()
+        
+        # if the game isn't over, naively set the best move to the first legal move in the list 
         if len(moves):
             bestMove = moves[0]
-        else:
+        else: # return 0 if game is over
             return 0, -10000, -10000
+        
+        # build heuristic module
         heuristic = Heuristic()
+
+        # set beta to the largest value so far to iteratively improve
         minVal = beta
 
         # for every possible move the AI can make
@@ -60,9 +84,10 @@ class PlayerAI(BaseAI):
         	# create a clone of the grid
             newGrid = grid.clone()
 
-
+            # apply the move to the clone
             newGrid.move(move)
-            #leaf of depth limited search tree
+
+            # if leaf of depth limited search tree
             if depth <= 0:
                 cost = heuristic.heurisiticEval(newGrid)
             #if depth >= 0, make an insert to every possible tile then select the smallest
@@ -72,7 +97,7 @@ class PlayerAI(BaseAI):
                 for x in newGrid.getAvailableCells():
                     tileGrid = newGrid.clone()
                     tileGrid.insertTile(x, 2)
-                    if time.time() - start > 0.8:
+                    if time.time() - start > 0.95:
                         return bestMove, best, minVal
                     low = heuristic.heurisiticEval(tileGrid)
 
