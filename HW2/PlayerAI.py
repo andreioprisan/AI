@@ -92,7 +92,7 @@ class PlayerAI(BaseAI):
                 cost = heuristic.heurisiticEval(newGrid)
             #if depth >= 0, make an insert to every possible tile then select the smallest
             else:
-                #insert to every possible tile position, assume insert is a 2 due to 90% probability
+                # insert to every possible tile position, assume insert is a 2 due to 90% probability
                 minInsert = (0,0)
                 for x in newGrid.getAvailableCells():
                     tileGrid = newGrid.clone()
