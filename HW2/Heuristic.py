@@ -8,7 +8,7 @@ class Heuristic:
     def heurisiticEval(self, grid):
 
         smoothWeight = 0.1
-        monotonicityWeight = 1.0
+        monotonicityWeight = 2.0
         freeWeight = 5.0
         maxTileWeight = 1.0
 
@@ -31,61 +31,57 @@ class Heuristic:
     def smoothness(self, grid):
         smoothness = 0
         # highVal = 1
+       
+        # # iterate by row, exploring each column before moving to the next row
+        # for row in range(4):
+        #     for col in range(4):
+        #         # check the current cell's neighbors to its right and down, if the board permits
+        #         curr = grid.getCellValue((row, col))
+
+        #         # not on right or bottom borders
+        #         if col < 3 and row < 3:
+        #             right = grid.getCellValue((row, col+1))
+        #             down = grid.getCellValue((row+1, col))
+
+        #             if curr == right:
+        #                 smoothness += curr
+
+        #             if curr == down:
+        #                 smoothness += curr
+
+        #         # on the right border, can only compare downward
+        #         elif col == 3 and row < 3: 
+        #             down = grid.getCellValue((row+1, col))
+        #             if curr == down:
+        #                 smoothness += curr
+
+        #         # on the bottom border, can only compare right
+        #         elif col < 3 and row == 3:
+        #             right = grid.getCellValue((row, col+1))
+
+        #             if curr == right:
+        #                 smoothness += curr
 
 
-        # iterate by row, exploring each column before moving to the next row
-        for row in range(4):
-            for col in range(4):
-                # check the current cell's neighbors to its right and down, if the board permits
-                curr = grid.getCellValue((row, col))
+        # iterate over the grid
+        for x in range(4):
+            for y in range(4):
+                # save the current tile value
+                value = grid.getCellValue((x, y))
 
-                # not on right or bottom borders
-                if col < 3 and row < 3:
-                    right = grid.getCellValue((row, col+1))
-                    down = grid.getCellValue((row+1, col))
-
-                    if curr == right:
-                        smoothness += curr
-
-                    if curr == down:
-                        smoothness += curr
-
-                # on the right border, can only compare downward
-                elif col == 3 and row < 3: 
-                    down = grid.getCellValue((row+1, col))
-                    if curr == down:
-                        smoothness += curr
-
-                # on the bottom border, can only compare right
-                elif col < 3 and row == 3:
-                    right = grid.getCellValue((row, col+1))
-
-                    if curr == right:
-                        smoothness += curr
-
-
-        # # iterate over the grid
-        # for x in range(4):
-        #     for y in range(4):
-        #         # save the current tile value
-        #         value = grid.getCellValue((x, y))
-
-        #         # increment the 
-        #         # highVal += pow(value, 2)
-        #         if value:
-
-        #             # SMOOTHNESS
-        #             # each value in the current row
-        #             for row in range(4):
-        #                 smoothness -= abs(value - grid.getCellValue((row, y)))
+                # increment the 
+                # highVal += pow(value, 2)
+                if value:
+                    # each value in the current row
+                    for row in range(4):
+                        smoothness -= abs(value - grid.getCellValue((row, y)))
                     
-        #             # repeat above but for all values in the column
-        #             for col in range(4):
-        #                 smoothness -= abs(value - grid.getCellValue((x, col)))
+                    # each value in the current column
+                    for col in range(4):
+                        smoothness -= abs(value - grid.getCellValue((x, col)))
 
 
         return smoothness
-        # return smoothness, mono, highVal
 
     def monotonicity(self, grid):
         mono = 0
@@ -132,7 +128,5 @@ class Heuristic:
         mono += max(scores)
 
         return mono
-        
-
 
 # http://stackoverflow.com/questions/22342854/what-is-the-optimal-algorithm-for-the-game-2048
