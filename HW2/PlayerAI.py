@@ -20,6 +20,9 @@ from BaseAI import BaseAI
 from random import randint
 
 
+# build heuristic module
+heuristic = Heuristic()
+
 class PlayerAI(BaseAI):
     def getMove(self, grid):
     # I'm too naive, please change me!
@@ -32,8 +35,8 @@ class PlayerAI(BaseAI):
         depth = 1
         bestMove = 1
 
-        # set time limit at 1 sec. (leave 0.05 time to make move and print board)
-        moveTime = .95
+        # set time limit at 1 sec
+        moveTime = 1
 
         # initialize alpha and beta to high and low values
         startAlpha = -10000
@@ -41,15 +44,13 @@ class PlayerAI(BaseAI):
 
         # start a timer to track the time for each move
         start = time.time()
-        runTime = 0
 
         # use iterative deepening to find best possible move in allotted time
-        while runTime < moveTime:
+        while (time.time() - start) < moveTime:
             # use alpha beta pruning to efficiently find a good move
             someBest = self.alphaBeta(depth, startAlpha, startBeta, grid, start)
             bestMove = someBest[0]
             depth += 1
-            runTime += time.time() - start
 
         return bestMove
 
@@ -72,9 +73,6 @@ class PlayerAI(BaseAI):
             bestMove = moves[0]
         else: # return 0 if game is over
             return 0, -10000, -10000
-        
-        # build heuristic module
-        heuristic = Heuristic()
 
         # set beta to the largest value so far to iteratively improve
         minVal = beta
@@ -97,7 +95,7 @@ class PlayerAI(BaseAI):
                 for x in newGrid.getAvailableCells():
                     tileGrid = newGrid.clone()
                     tileGrid.insertTile(x, 2)
-                    if time.time() - start > 0.95:
+                    if (time.time() - start) > 1:
                         return bestMove, best, minVal
                     low = heuristic.heurisiticEval(tileGrid)
 
@@ -112,5 +110,4 @@ class PlayerAI(BaseAI):
             if best < cost:
                 best = cost
                 bestMove = move
-
         return bestMove, best, minVal
