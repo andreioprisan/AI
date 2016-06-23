@@ -15,11 +15,13 @@ labels = []
 
 # builds transposed vectors
 def buildVectors():
+	print "\ntransposing vectors"
 	st = np.transpose([class1, class2])
 	return st
 
 # load the chessboard data into a data matrix and return as tuple
 def load(filename):
+	print "\nloading raw data from {filename}".format(filename=filename)
 	with open(filename, 'rU') as csvfile:
 		reader = csv.reader(csvfile, delimiter=',', )
 		reader.next() # skip the header line
@@ -37,4 +39,4 @@ def getClass2():
 	return getClass2
 
 def getLabels():
-	return labelsclea
+	return labels

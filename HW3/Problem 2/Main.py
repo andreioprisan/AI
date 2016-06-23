@@ -7,9 +7,9 @@
 # 	a classification model for a chessboard-like dataset
 import time
 
-import matplotlib.pyplot as plt
 import load_build
 import SVMs
+import Plot
 
 if __name__ == '__main__':
 	print "start"
@@ -28,6 +28,24 @@ if __name__ == '__main__':
 
 	# get the test vector
 	testv = data[1][0]
+
+	# build and train linear, polynomial, and radial basis function SVMs
+	linearSVM = SVMs.linearSVM(100)
+	linearSVM = SVMs.trainSVM(linearSVM, sv, data[0][1])
+
+	polynomialSVM = SVMs.polynomialSVM(100., 5)
+	polynomialSVM = SVMs.trainSVM(polynomialSVM, sv, data[0][1])
+
+	rbfSVM = SVMs.rbfSVM(1000., 1)
+	rbfSVM = SVMs.trainSVM(rbfSVM, sv, data[0][1])
+
+	# SVMs.runCVAndOptimize(sv, data[0][1])
+
+	# test the three SVMs and report their accuracies
+	SVMs.accuracyTest(linearSVM, polynomialSVM, rbfSVM, data[1][0], data[1][1])
+
+	# create the plot
+	Plot.setup(linearSVM, polynomialSVM, rbfSVM)
 
 
 	print "\ntotal program execution = {t} seconds".format(t=(time.time()-start_time))
