@@ -13,15 +13,8 @@
 #		- Metrics
 
 from sklearn import svm
-from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import accuracy_score
-
-# split the raw data into 40% testing and 60% training
-def testSplit(vectors, labels):
-	print "\nsplitting data into 60% training and 40% testing"
-	train1, test1, trainL, testL = train_test_split(vectors, labels, test_size=0.4, random_state=42)
-	return [train1, trainL], [test1, testL]
 
 # Builds and returns a linear SVM given parameter C
 def linearSVM(c):
@@ -46,6 +39,7 @@ def trainSVM(svm, sv, y):
 	print "\ntraining SVM"
 	# cross validate 5 times
 	scores = cross_val_score(svm, sv, y, cv=5)
+	# print scores NEED TO REPORT THIS IN THE WRITE UP
 
 	# fit the data to the labels
 	svm.fit(sv, y)
@@ -78,6 +72,3 @@ def accuracyTest(lin, poly, rbf, x_test, y_true):
 	print "\nlinear accuracy: " + repr(accuracy_score(y_true, runSVM(lin, x_test)))
 	print "polynomial accuracy: " + repr(accuracy_score(y_true, runSVM(poly, x_test)))
 	print "rbf accuracy: " + repr(accuracy_score(y_true, runSVM(rbf, x_test)))
-
-
-

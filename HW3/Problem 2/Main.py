@@ -21,7 +21,7 @@ if __name__ == '__main__':
 	vectors = load_build.buildVectors()
 
 	# split data into training and testing
-	data = SVMs.testSplit(vectors, load_build.getLabels())
+	data = load_build.testSplit(vectors, load_build.getLabels())
 
 	# get the support vector of training data
 	sv = data[0][0]
@@ -39,14 +39,13 @@ if __name__ == '__main__':
 	rbfSVM = SVMs.rbfSVM(1000., 1)
 	rbfSVM = SVMs.trainSVM(rbfSVM, sv, data[0][1])
 
-	# SVMs.runCVAndOptimize(sv, data[0][1])
+	# SVMs.runCVAndOptimize(sv, data[0][1]) # REPORT THE SCORES PRINTED IN TRAIN METHOD
 
 	# test the three SVMs and report their accuracies
 	SVMs.accuracyTest(linearSVM, polynomialSVM, rbfSVM, data[1][0], data[1][1])
 
 	# create the plot
-	Plot.setup(linearSVM, polynomialSVM, rbfSVM)
-
+	Plot.setup(sv, linearSVM, rbfSVM, polynomialSVM, tup)
 
 	print "\ntotal program execution = {t} seconds".format(t=(time.time()-start_time))
 	print "exiting...\n"

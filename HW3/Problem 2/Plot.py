@@ -1,4 +1,12 @@
+# Braden Katzman - bmk2137
+# Columbia University
+# Artificial Intelligence Summer 2016
+# HW3 - Question 2
+# Description:
+#	Provides graphical plots of data and classification
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 # global variables
 # step size for the mesh
@@ -17,20 +25,19 @@ def showPlot():
 	print "\nshowing plot"
 	plt.show()
 
-def setup(linearSVM, polynomialSVM, rbfSVM):
+def setup(sv, linearSVM, rbfSVM, polynomialSVM, tup):
 	# create a mesh to plot in
 	x_min, x_max = sv[:, 0].min() - 1, sv[:, 0].max() + 1
 	y_min, y_max = sv[:, 1].min() - 1, sv[:, 1].max() + 1
-	y_min, y_max = sv[:, 1].min() - 1, sv[:, 1].max() + 1
-
-	np.arange(y_min, y_max, h)
+	xx, yy = np.meshgrid(np.arange(x_min, x_max, h), 
+							np.arange(y_min, y_max, h))
 
 	for i, clf in enumerate((linearSVM, rbfSVM, polynomialSVM)):
 		# plot decision boundary --> assign a color to each point in mesh [x_min, m_max]x[y_min, y_max]
 		plt.subplot(2, 2, i + 1)
 		plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
-		Z = clf.predict(np.c_[xx.ravel(), yy,ravel()])
+		Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
 
 		# put result into color plot
 		Z = Z.reshape(xx.shape)
@@ -38,7 +45,7 @@ def setup(linearSVM, polynomialSVM, rbfSVM):
 
 		# also plot training points
 		plt.xticks(())
-		plot.yticks(())
+		plt.yticks(())
 		plt.title(titles[i])
 
 	plotScatter(tup[0], tup[1], tup[2])

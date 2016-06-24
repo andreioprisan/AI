@@ -7,11 +7,18 @@
 
 import csv
 import numpy as np
+from sklearn.cross_validation import train_test_split
 
 # global variables
 class1 = []
 class2 = []
 labels = []
+
+# split the raw data into 40% testing and 60% training
+def testSplit(vectors, labels):
+	print "\nsplitting data into 60% training and 40% testing"
+	train1, test1, trainL, testL = train_test_split(vectors, labels, test_size=0.4, random_state=42)
+	return [train1, trainL], [test1, testL]
 
 # builds transposed vectors
 def buildVectors():
