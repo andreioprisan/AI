@@ -67,8 +67,12 @@ def runCVAndOptimize(sv, y):
 			poly = polynomialSVM(c[i], deg[n])
 			trainSVM(poly, sv, y)
 
+
+
 # makes predictions and prints the accuracies for the various SVMs
 def accuracyTest(lin, poly, rbf, x_test, y_true):
 	print "\nlinear accuracy: " + repr(accuracy_score(y_true, runSVM(lin, x_test)))
-	print "polynomial accuracy: " + repr(accuracy_score(y_true, runSVM(poly, x_test)))
+	# print "polynomial accuracy: " + repr(accuracy_score(y_true, runSVM(poly, x_test)))
 	print "rbf accuracy: " + repr(accuracy_score(y_true, runSVM(rbf, x_test)))
+
+
