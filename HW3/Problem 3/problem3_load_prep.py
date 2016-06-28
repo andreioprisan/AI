@@ -22,31 +22,13 @@ def loadImage(filename):
 
 	return trees
 
-def loadSciPyFace():
-	# load the raccoon face as a numpy array
-	try:
-	    face = sp.face(gray=True)
-	except AttributeError:
-	    # Newer versions of scipy have face in misc
-	    from scipy import misc
-	    face = misc.face(gray=True)
-
-
-	face = sp.misc.imresize(face, 0.10) / 255.
-
-	return face
-
 # transform an image into a 2D numpy array
 def transformToArray(img):
 	print "\ntransforming image into numpy array"
 
 	width, height, dimensions = orig = tuple(img.shape)
 
-	# print str(width) + ", " + str(height) + ", " + str(dimensions)
-
 	# convert to array
 	img_as_array = np.reshape(img, (width * height, dimensions))
-	print type(img_as_array)
-	print dimensions
 
 	return img_as_array, width, height, dimensions

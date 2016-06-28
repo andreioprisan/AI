@@ -7,6 +7,7 @@
 
 from sklearn.cluster import KMeans
 import scipy as sp
+import warnings
 
 # builds a K Means clustering model with given k value
 def buildKMeans(k):
@@ -28,6 +29,8 @@ def fitKMeans(kmeans, img_array):
 # predicts the color indices on the full image
 def predict(kmeans, img_array):
 	print "\npredicting color indices on full image"
+
+	warnings.filterwarnings("ignore") # ignore uint8 to float64 warning
 
 	predictions = kmeans.predict(img_array)
 	print "done predicting"
