@@ -1,4 +1,3 @@
-
 # Braden Katzman - bmk2137
 # Columbia University
 # Artificial Intelligence Summer 2016
@@ -18,25 +17,25 @@ from sklearn.metrics import accuracy_score
 
 # Builds and returns a linear SVM given parameter C
 def linearSVM(c):
-	# print "\nbuilding linear SVM with C={c}".format(c=c)
+	print "\nbuilding linear SVM with C={c}".format(c=c)
 	linSVM = svm.SVC(C=c, kernel='linear')
 	return linSVM
 
 # Builds and returns a polynomial SVM given parameters C and degrees
 def polynomialSVM(c, deg):
-	# print "\nbuilding polynomial SVM with C={c} and Degrees={d}".format(c=c, d=deg)
+	print "\nbuilding polynomial SVM with C={c} and Degrees={d}".format(c=c, d=deg)
 	polySVM = svm.SVC(C=c, kernel='poly', degree=deg)
 	return polySVM
 
 # Builds and returns a Radial Basis Function SVM given parameters C and gamma
 def rbfSVM(c, gamma):
-	# print "\nbuilding Radial Basis Function SVM with C={c} and Gamme={g}".format(c=c, g=gamma)
+	print "\nbuilding Radial Basis Function SVM with C={c} and Gamma={g}".format(c=c, g=gamma)
 	rbfSVM = svm.SVC(C=c, kernel='rbf', gamma=gamma)
 	return rbfSVM
 
 # Trains and returns a trained SVM given parameters SVM, support vector (training), and y (labels)
 def trainSVM(svm, sv, y):
-	# print "\ntraining SVM"
+	print "\ntraining SVM"
 	# cross validate 5 times
 	scores = cross_val_score(svm, sv, y, cv=5)
 	print scores
@@ -47,7 +46,7 @@ def trainSVM(svm, sv, y):
 
 # Tests a SVM on testing data and returns the prediction labels given parameters svm and v (testing data vector)
 def runSVM(svm, v):
-	# print "\npredicting labels with SVM"
+	print "\npredicting labels with SVM"
 	predictions = svm.predict(v)
 	return predictions
 
@@ -72,8 +71,8 @@ def runCVAndOptimize(sv, y, x_test, y_true):
 			trainSVM(poly, sv, y)
 			singleAccuracyTest(poly, "polynomial", x_test, y_true)
 
-			print "RBF C=" + repr(c[i]) + " Deg=" + repr(deg[n])
-			rbf = rbfSVM(c[i], deg[n])
+			print "RBF C=" + repr(c[i]) + " Gamma=" + repr(g[n])
+			rbf = rbfSVM(c[i], g[n])
 			trainSVM(rbf, sv, y)
 			singleAccuracyTest(rbf, "RBF", x_test, y_true)
 

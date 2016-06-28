@@ -31,7 +31,6 @@ def run(img_array):
 		print assign_labels
 		t0 = time.time()
 		labels = spectral_clustering(graph, n_clusters=N_REGIONS, assign_labels=assign_labels, random_state=1)
-		print "past"
 		t1 = time.time()
 		labels = labels.reshape(img_array.shape)
 
@@ -39,7 +38,6 @@ def run(img_array):
 		plt.imshow(img_array, cmap=plt.cm.gray)
 
 		for l in range(N_REGIONS):
-			print l
 			plt.contour(labels == l, contours=1, colors=[plt.cm.spectral(l / float(N_REGIONS))])
 
 

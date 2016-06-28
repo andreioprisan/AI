@@ -13,11 +13,11 @@ import numpy as np
 h = 0.02
 
 # title for the plots
-titles = ['SVC with linear (c 100) kernel',
-			'SVC with RBF (gamma 1, c 1000) kernel',
-			'SVC with polynomial (degree 5, c 100) kernel',
-			'Logistic Regression',
-			'Decision Trees']
+titles1 = ['SVC with Linear (c=1) kernel',
+			'SVC with RBF (c=100, gamma=1) kernel',
+			'SVC with Polynomial (c=10 5, degree=5) kernel',]
+titles2 = ['Logistic Regression (c=1)',
+			'Decision Tree (max_depth=5)']
 
 def plotScatter(class1, class2, labels):
 	print "\nplotting scatter"
@@ -48,7 +48,7 @@ def setup(sv, linearSVM, polynomialSVM, rbfSVM, tup):
 		# also plot training points
 		plt.xticks(())
 		plt.yticks(())
-		plt.title(titles[i])
+		plt.title(titles1[i])
 
 		plotScatter(tup[0], tup[1], tup[2])
 
@@ -75,7 +75,7 @@ def setup2(sv, logReg, decTree, tup):
 		# also plot training points
 		plt.xticks(())
 		plt.yticks(())
-		plt.title(titles[i])
+		plt.title(titles2[i])
 
 		plotScatter(tup[0], tup[1], tup[2])
 

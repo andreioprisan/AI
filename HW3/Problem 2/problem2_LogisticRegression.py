@@ -11,13 +11,13 @@ from sklearn.metrics import accuracy_score
 
 # Builds and returns a logistic regression classifier given parameters C and tol (tolerance)
 def logReg(c):
-	# print "\nbuilding logisitc regression classifier with C={c}".format(c=c)
+	print "\nbuilding logisitc regression classifier with C={c}".format(c=c)
 	logreg = linear_model.LogisticRegression(C=c)
 	return logreg
 
 # Trains and returns a trained SVM given parameters SVM, support vector (training), and y (labels)
 def trainLogReg(lr, sv, y):
-	# print "\ntraining Logistic Regression Classifier"
+	print "\ntraining Logistic Regression Classifier"
 	# cross validate 5 times
 	scores = cross_val_score(lr, sv, y, cv=5)
 	print scores # NEED TO REPORT THIS IN THE WRITE UP
@@ -28,7 +28,7 @@ def trainLogReg(lr, sv, y):
 
 # Tests a Logistic Regression Classifier on testing data and returns the prediction labels given parameters lr and v (testing data vector)
 def runLR(lr, v):
-	# print "\npredicting labels with Logistic Regression Classifier"
+	print "\npredicting labels with Logistic Regression Classifier"
 	predictions = lr.predict(v)
 	return predictions
 

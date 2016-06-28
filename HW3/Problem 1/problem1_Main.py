@@ -1,7 +1,7 @@
 import time
-import DataPrepAndNormalization as prep_norm
-import GradientDescent as gd
-import Predict
+import problem1_DataPrepAndNormalization as prep_norm
+import problem1_GradientDescent as gd
+import problem1_Predict as Predict
 
 
 if __name__ == '__main__':
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	# plot the risk function
 	gd.plotRisk(50, scaled, data[1], len(data[1]))
 
-	beta = gd.gradient(scaled, data[1], [0,0,0], 0.05, 1500, len(data[1]))
+	beta = gd.gradient(scaled, data[1], [0,0,0], 0.05, 50, len(data[1]))
 
 	print 'Beta = ' + repr(beta)
 
@@ -34,16 +34,6 @@ if __name__ == '__main__':
 	pred = Predict.predict(beta, nscale[0][0], nscale[1][0])
 
 	print "The height of a 5-year old girl weighting 20 kilos is: " + repr(pred)
-
-	beta = prep_norm.norm(data[0], data[1])
-	
-	print "The Beta obtained with normal equation is:"
-	
-	print beta
-	
-	pred = Predict.predict(beta, nscale[0][0], nscale[1][0])
-	
-	print "The height of a 5-year old girl weighting 20 kilos is using normal equation is: " + repr(pred)
 
 
 	print "\ntotal program execution = {t} seconds".format(t=(time.time()-start_time))

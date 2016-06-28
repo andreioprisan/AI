@@ -36,8 +36,8 @@ def mean_stdev(matrix):
     return [mean_age, stdev_age], [mean_weight, stdev_weight]
 
 def printFeatureStats(tup):
-	print "\nThe age mean is " + repr(tup[0][0]) + " and the std deviation is " + repr(tup[0][1])
-	print "The weight mean is " + repr(tup[1][0]) + " and the std deviation is " + repr(tup[1][1])
+	print "\nThe mean age is " + repr(tup[0][0]) + " and the std deviation is " + repr(tup[0][1])
+	print "The mean weight is " + repr(tup[1][0]) + " and the std deviation is " + repr(tup[1][1])
 
 # scales the data by the formula listed at top of file x_scaled
 def scale(x, tup):
@@ -56,13 +56,6 @@ def scale(x, tup):
 # helper function for computing x_scaled
 def x_scaled(x, mean_x, stdev_x):
 	return (x - mean_x) / stdev_x
-
-def norm(x, y):
-    xT = np.transpose(x)
-    dot = np.dot(x, xT)
-    inv = np.linalg.inv(dot)
-    dot = np.dot(y, xT)
-    return np.dot(inv, dot)
 
 
 
