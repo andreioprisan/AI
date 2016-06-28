@@ -9,7 +9,7 @@
 # MAIN SOURCE USED:  http://scikit-learn.org/stable/auto_examples/cluster/plot_color_quantization.html
 # source: http://stackoverflow.com/questions/25528654/numpy-array-to-png-file-and-back
 
-from scipy import misc
+import scipy as sp
 import numpy as np
 import warnings
 
@@ -18,9 +18,23 @@ def loadImage(filename):
 
 	warnings.filterwarnings("ignore") # ignore uint8 to float64 warning
 	# load file as np array
-	trees = misc.imread(filename)
+	trees = sp.misc.imread(filename)
 
 	return trees
+
+def loadSciPyFace():
+	# load the raccoon face as a numpy array
+	try:
+	    face = sp.face(gray=True)
+	except AttributeError:
+	    # Newer versions of scipy have face in misc
+	    from scipy import misc
+	    face = misc.face(gray=True)
+
+
+	face = sp.misc.imresize(face, 0.10) / 255.
+
+	return face
 
 # transform an image into a 2D numpy array
 def transformToArray(img):

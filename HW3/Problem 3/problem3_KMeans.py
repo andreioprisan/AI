@@ -6,6 +6,7 @@
 #	Fits a K Means model to an image given a k value
 
 from sklearn.cluster import KMeans
+import scipy as sp
 
 # builds a K Means clustering model with given k value
 def buildKMeans(k):

@@ -17,38 +17,54 @@ if __name__ == '__main__':
 	print "start"
 	start_time = time.time()
 
-	# load the image
-	trees = load_prep.loadImage('trees.png')
+	### PART 1
 
-	# get 2D array representation of image
-	tup = load_prep.transformToArray(trees)
-	trees_array = tup[0]
-	width = tup[1]
-	height = tup[2]
-	dimensions = tup[3]
+	# # load the image
+	# trees = load_prep.loadImage('trees.png')
+
+	# # get 2D array representation of image
+	# tup = load_prep.transformToArray(trees)
+	# trees_array = tup[0]
+	# width = tup[1]
+	# height = tup[2]
+	# dimensions = tup[3]
+
+	# # build a kmeans model with k = 3
+	# kmeans = KMeans.buildKMeans(3)
+
+	# # fit the image to the model
+	# kmeans = KMeans.fitKMeans(kmeans, trees_array)
+
+	# # predict the color indices on the image
+	# predictions = KMeans.predict(kmeans, trees_array)
+
+	# # recreate the image
+	# new_img = RecreateImage.recreateImage(trees_array, predictions, width, height, dimensions)
+
+	# # set the images up on the plot
+	# Plot.loadImagePlot(trees, 1, [0, 0, 1, 1], "Original")
+	# Plot.loadImagePlot(new_img, 2, [0, 0, 1, 1], "K Means k=3")
+
+	# Plot.showPlot()
+
+
+	### BONUS QUESTION
+
+	# run kmeans on the image where spectral clustering works best
+	scipyFace = load_prep.loadSciPyFace()
 
 	# build a kmeans model with k = 3
 	kmeans = KMeans.buildKMeans(3)
 
 	# fit the image to the model
-	kmeans = KMeans.fitKMeans(kmeans, trees_array)
+	kmeans = KMeans.fitKMeans(kmeans, scipyFace)
 
 	# predict the color indices on the image
-	predictions = KMeans.predict(kmeans, trees_array)
+	predictions = KMeans.predict(kmeans, scipyFace)
 
 	# recreate the image
-	new_img = RecreateImage.recreateImage(trees_array, predictions, width, height, dimensions)
+	new_img = RecreateImage.recreateImage(scipyFace, predictions, 768, 1024, 3)
 
-	# set the images up on the plot
-	Plot.loadImagePlot(trees, 1, [0, 0, 1, 1], "Original")
-	Plot.loadImagePlot(new_img, 2, [0, 0, 1, 1], "K Means k=3")
-
-	Plot.showPlot()
-
-	# load the flag image
-	# flag = load_prep.loadImage('flag.png')
-	# tup = load_prep.transformToArray(flag)
-	# flag_as_array = tup[0]
 
 	SpectralClustering.run2()
 
