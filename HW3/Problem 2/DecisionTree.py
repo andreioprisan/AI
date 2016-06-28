@@ -11,13 +11,13 @@ from sklearn.metrics import accuracy_score
 
 # Builds and returns a decision tree classifier given parameter max_depth
 def decisionTree(max_depth):
-	print "\nbuilding decision tree classifier with max_depth={max_depth}".format(max_depth=max_depth)
+	# print "\nbuilding decision tree classifier with max_depth={max_depth}".format(max_depth=max_depth)
 	dt = tree.DecisionTreeClassifier(max_depth=max_depth)
 	return dt
 
 # Trains and returns a trained SVM given parameters SVM, support vector (training), and y (labels)
 def trainDT(dt, sv, y):
-	print "\ntraining Logistic Regression Classifier"
+	# print "\ntraining Logistic Regression Classifier"
 	# cross validate 5 times
 	scores = cross_val_score(dt, sv, y, cv=5)
 	print scores # NEED TO REPORT THIS IN THE WRITE UP
@@ -28,12 +28,12 @@ def trainDT(dt, sv, y):
 
 # Tests a Decision Tree Classifier on testing data and returns the prediction labels given parameters dt and v (testing data vector)
 def runDT(dt, v):
-	print "\npredicting labels with Logistic Regression Classifier"
+	# print "\npredicting labels with Logistic Regression Classifier"
 	predictions = dt.predict(v)
 	return predictions
 
 # runs cross validation and optimizes for different c
-def runCVAndOptimize(sv, y):
+def runCVAndOptimize(sv, y, x_test, y_true):
 	print "\nrunning cross validation and optimizing"
 	max_depth = [1., 2., 3., 4., 5., 6., 7., 8., 9., 10.]
 
@@ -42,7 +42,8 @@ def runCVAndOptimize(sv, y):
 		print 'Decision Tree max_depth=' + repr(max_depth[i])
 		dt = decisionTree(max_depth[i])
 		trainDT(dt, sv, y)
+		accuracyTest(dt, "Decision Tree", x_test, y_true)
 
 # makes predictions and prints the accuracies for the various SVMs
-def accuracyTest(dt, x_test, y_true):
-	print "\nDecision Tree Accuracy: " + repr(accuracy_score(y_true, runDT(dt, x_test)))
+def accuracyTest(dt, type_, x_test, y_true):
+	print type_ + " accuracy: " + repr(accuracy_score(y_true, runDT(dt, x_test)))

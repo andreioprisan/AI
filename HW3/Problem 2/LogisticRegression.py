@@ -11,13 +11,13 @@ from sklearn.metrics import accuracy_score
 
 # Builds and returns a logistic regression classifier given parameters C and tol (tolerance)
 def logReg(c):
-	print "\nbuilding logisitc regression classifier with C={c}".format(c=c)
+	# print "\nbuilding logisitc regression classifier with C={c}".format(c=c)
 	logreg = linear_model.LogisticRegression(C=c)
 	return logreg
 
 # Trains and returns a trained SVM given parameters SVM, support vector (training), and y (labels)
 def trainLogReg(lr, sv, y):
-	print "\ntraining Logistic Regression Classifier"
+	# print "\ntraining Logistic Regression Classifier"
 	# cross validate 5 times
 	scores = cross_val_score(lr, sv, y, cv=5)
 	print scores # NEED TO REPORT THIS IN THE WRITE UP
@@ -28,12 +28,12 @@ def trainLogReg(lr, sv, y):
 
 # Tests a Logistic Regression Classifier on testing data and returns the prediction labels given parameters lr and v (testing data vector)
 def runLR(lr, v):
-	print "\npredicting labels with Logistic Regression Classifier"
+	# print "\npredicting labels with Logistic Regression Classifier"
 	predictions = lr.predict(v)
 	return predictions
 
 # runs cross validation and optimizes for different c
-def runCVAndOptimize(sv, y):
+def runCVAndOptimize(sv, y, x_test, y_true):
 	print "\nrunning cross validation and optimizing"
 	c = [1., 10., 100., 1000.]
 
@@ -42,7 +42,8 @@ def runCVAndOptimize(sv, y):
 		print 'Log Reg C=' + repr(c[i])
 		logreg = logReg(c[i])
 		trainLogReg(logreg, sv, y)
+		accuracyTest(logreg, "logistic regression", x_test, y_true)
 
 # makes predictions and prints the accuracies for the various SVMs
-def accuracyTest(logReg, x_test, y_true):
-	print "\nLogistic Regression Accuracy: " + repr(accuracy_score(y_true, runLR(logReg, x_test)))
+def accuracyTest(logreg, type_, x_test, y_true):
+	print type_ + " accuracy: " + repr(accuracy_score(y_true, runLR(logreg, x_test)))
